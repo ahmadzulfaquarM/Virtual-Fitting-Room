@@ -1,0 +1,29 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.tsbuildinfo
+
+# Environment and secrets: never commit
+.env
+.env.*
+!.env.example
+
+# Future phases: private user data must never be committed
+storage/
+uploads/
+scans/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Playwright output
+playwright-report/
+test-results/

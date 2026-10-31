@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+/*
+ * Brand tokens: identical to the MERN Shopping Cart (Tailwind CSS, blue-600 brand).
+ *
+ * Tailwind v4 ships a newer default palette whose blue-600 is NOT #2563EB, so the
+ * exact Tailwind v3 hex values used by the store are pinned here. Components keep using
+ * the same utility classes as the store (bg-blue-600, text-gray-900, border-slate-200 ...),
+ * which means they can be copied into the cart unchanged.
+ */
+@theme {
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-600: #2563eb; /* primary */
+  --color-blue-700: #1d4ed8; /* primary hover */
+
+  --color-slate-50: #f8fafc; /* page background */
+  --color-slate-200: #e2e8f0; /* borders */
+
+  --color-gray-600: #4b5563; /* body text */
+  --color-gray-900: #111827; /* headings */
+
+  /* Status colours (Tailwind v3 values) */
+  --color-green-50: #f0fdf4;
+  --color-green-700: #15803d;
+  --color-red-50: #fef2f2;
+  --color-red-700: #b91c1c;
+  --color-amber-50: #fffbeb;
+  --color-amber-700: #b45309;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-slate-50 text-gray-600 antialiased;
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply text-gray-900;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue-600;
+  }
+}

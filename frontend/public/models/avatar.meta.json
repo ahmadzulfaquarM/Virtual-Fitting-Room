@@ -1,0 +1,45 @@
+{
+  "kind": "placeholder-mannequin",
+  "notScanned": true,
+  "units": "m",
+  "up": "+Y",
+  "facing": "+Z",
+  "heightM": 1.75,
+  "groundTruth": {
+    "chestCircumferenceM": 0.8588,
+    "waistCircumferenceM": 0.7038,
+    "hipCircumferenceM": 0.8759
+  },
+  "groundTruthMethod": "Polygon perimeter of the generated horizontal cross-section at y=1.28 (chest), 1.10 (waist), 0.94 (hips).",
+  "generator": "tools/generate_sample_assets.py",
+  "avatar": {
+    "vertices": 9168,
+    "triangles": 17280,
+    "bytes": 324896,
+    "min": [
+      -0.3967082930226009,
+      0.0,
+      -0.114
+    ],
+    "max": [
+      0.3967082930226009,
+      1.7499989211788711,
+      0.17
+    ]
+  },
+  "garment": {
+    "vertices": 1568,
+    "triangles": 2944,
+    "bytes": 56516,
+    "min": [
+      -0.31221244917547175,
+      0.9,
+      -0.1338426330798479
+    ],
+    "max": [
+      0.31221244917547175,
+      1.505,
+      0.1358436395759717
+    ]
+  }
+}
