@@ -4,7 +4,9 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { validateBytes } from 'gltf-validator'
 
-const dir = new URL('../public/models/', import.meta.url).pathname
+import { fileURLToPath } from 'node:url'
+
+const dir = fileURLToPath(new URL('../public/models/', import.meta.url))
 const files = readdirSync(dir).filter((f) => f.endsWith('.glb'))
 if (files.length === 0) {
   console.error('No .glb files found in public/models')
