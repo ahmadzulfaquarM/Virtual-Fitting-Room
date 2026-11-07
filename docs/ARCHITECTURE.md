@@ -119,9 +119,33 @@ Playwright drives real Chromium with software WebGL and checks rendered pixels (
 present or absent, silhouette width front vs side), every control, drag and wheel input, missing,
 fake and corrupt assets, missing WebGL, and a phone-sized layout.
 
+## Phase 3: guided camera scanning
+
+```
+IntroStep (consent, tips) -> HeightStep -> CameraStep -> ReviewStep -> approved
+        \_________________ scanReducer (pure; invalid transitions are no-ops) ______/
+```
+
+- **Nothing leaves the browser.** Photos are Blobs in `ScanFlow` state. The only exit is the
+  `onApprove({heightCm, shots})` prop, called after the approval box is ticked and Approve is pressed.
+  Phase 3 passes no handler. Unmount or Delete drops the blobs and revokes object URLs.
+- **Camera only on a click.** `startCamera` runs when `CameraStep` mounts, which only happens after
+  the person presses Start camera. Tracks are stopped on back, error, unmount and camera switch.
+- **Checks (pure, tested on synthetic data):** blocking = person found, one person, whole body
+  visible, distance, centred, face-on vs side-on (shoulder width / torso length), still, light.
+  Warnings (flag, do not block) = arms, tilt, which way round, contrast, sharpness, backlight.
+  The photo is taken from the raw (unmirrored) video; only the preview is mirrored.
+- **Services are injectable** (`defaultServices.js`), so the flow is tested with a fake camera,
+  detector and frame source, and in a real browser with Chromium's fake camera device.
+- **Pose model:** MediaPipe Pose Landmarker lite, VIDEO mode, GPU delegate then CPU, self-hosted.
+  It returns landmark positions only. It does not measure the body: passing every check means
+  "the photo is usable", never "measurements will be accurate". Height is self-reported and unverified.
+- **Provisional:** the set of views (`captureConfig.js`) and every threshold (`poseQuality.js`,
+  `imageQuality.js`). Thresholds are heuristics, validated on synthetic poses and a mannequin only.
+
 ## Planned seams for later phases (not implemented)
 
-- `frontend/src/features/viewer/` Three.js viewer (built in Phase 2) and `features/scan/` camera flow (Phase 3).
+- `frontend/src/features/viewer/` Three.js viewer (built in Phase 2) and `features/scan/` camera flow (built in Phase 3).
 - `backend/app/reconstruction/` a provider-independent interface with adapters per model or API
   (Phase 4), so a provider can be replaced without touching the rest.
 - `backend/app/sizing/` pure, rule-based, unit-testable size logic kept separate from visual try-on

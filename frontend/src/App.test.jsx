@@ -21,7 +21,7 @@ describe('App', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: /3D Virtual Fitting Room/i }),
     ).toBeVisible()
-    expect(screen.getByText(/Nothing on this page performs a body scan/i)).toBeVisible()
+    expect(screen.getByText(/Nothing on this page reconstructs your body/i)).toBeVisible()
     const viewer = screen.getByTestId('viewer-stub')
     expect(viewer).toHaveAttribute('data-avatar', '/models/avatar.glb')
     expect(viewer).toHaveAttribute('data-garment', '/models/garment.glb')

@@ -15,7 +15,13 @@ export async function stubBackend(page) {
 export function watchConsole(page) {
   const problems = []
   // react-three-fiber 9.8 still constructs THREE.Clock, which three r18x deprecated.
-  const knownWarnings = [/THREE\.Clock: This module has been deprecated/]
+  const knownWarnings = [
+    /THREE\.Clock: This module has been deprecated/,
+    // Native MediaPipe / ANGLE log lines (software WebGL in the test browser). Not app errors.
+    /OpenGL error checking is disabled/,
+    /GPU stall due to ReadPixels/,
+    /landmark_projection_calculator\.cc.*NORM_RECT without IMAGE_DIMENSIONS/,
+  ]
   page.on('console', (message) => {
     const type = message.type()
     if (type !== 'error' && type !== 'warning') return

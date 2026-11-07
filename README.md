@@ -68,6 +68,7 @@ drives Chromium with software WebGL, so it works on machines without a GPU.
 ### One-shot verification
 
 ```bash
+bash scripts/verify-phase3.sh     # Phase 2 checks (regression) + model check + scan tests (all in the e2e run)
 bash scripts/verify-phase2.sh     # Phase 1 checks (regression) + asset validation + browser tests
 bash scripts/verify-phase1.sh     # only the Phase 1 checks
 ```
@@ -88,6 +89,32 @@ Both do a clean `npm ci` and a fresh Python venv first.
    scroll the page with a finger that starts on the viewer. Report whether it feels usable.
 2. On a machine with a real GPU: confirm smooth rotation and no flicker.
 3. Open the page, switch the phone to airplane mode and press Try again on a missing asset.
+
+## Using the scanner (Phase 3)
+
+Press **Start body scan**. Tick the consent box, enter your height, then press **Start camera**
+(the browser asks for permission only then). Stand 2 to 3 m back with your whole body in frame; the
+photo is taken automatically after the checks pass and you hold still for about 4 seconds, or press
+**Capture now** once everything passes. Review the four photos, retake any, tick the approval box and
+press **Approve photos**. In this phase nothing is uploaded: photos exist only in the page.
+
+The camera views (front, left, back, right) are provisional; Phase 4 fixes them once the
+reconstruction provider's input requirements are verified (`features/scan/captureConfig.js`).
+
+### Manual checks that automation cannot cover (Phase 3)
+
+1. **Real permission revoke**: while scanning, remove camera access in the browser's site settings
+   (or unplug a USB camera). Expect "The camera stopped" with a Try again button. (Automated tests
+   only simulate the track ending.)
+2. **A real person, on a real phone and a real webcam**: all pose heuristics were tuned on synthetic
+   poses and a mannequin render only. Try bad light, loose clothes, partial body, two people, wrong
+   direction, and report any case where a good photo is refused or a bad one accepted.
+3. **Side views**: on mannequin renders MediaPipe reports knees and feet at 0.1 to 0.3 visibility, so
+   the side-on visibility checks have not been exercised with real detection at all.
+4. Denied permission on iOS Safari and Firefox (the Permissions API for camera is not available
+   there, so only the track "ended" event signals a revoke).
+5. `npm run verify:pose-model` on a machine with internet access to compare the model against
+   Google's official file (the build environment could not reach it).
 
 ## Manual browser check (required for the "no console errors" criterion)
 

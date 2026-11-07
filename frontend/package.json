@@ -13,9 +13,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "validate:assets": "node scripts/validate-assets.js"
+    "validate:assets": "node scripts/validate-assets.js",
+    "postinstall": "node scripts/copy-mediapipe-wasm.js",
+    "predev": "node scripts/copy-mediapipe-wasm.js",
+    "prebuild": "node scripts/copy-mediapipe-wasm.js",
+    "verify:pose-model": "node scripts/verify-pose-model.js"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^1.2.2",
     "@react-three/fiber": "^9.8.2",
     "@tailwindcss/vite": "^4.3.3",
     "react": "^19.3.1",

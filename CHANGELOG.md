@@ -1,5 +1,39 @@
 # Changelog
 
+## Phase 3: Guided camera scanning (2026-11-03)
+
+### Added
+- `frontend/src/features/scan/`: `ScanFlow.jsx` (intro/consent -> height -> camera -> review ->
+  approval, services injectable for tests), `IntroStep`, `HeightStep`, `CameraStep`, `ReviewStep`,
+  `BlobImage`, and pure logic: `captureConfig` (the four views, PROVISIONAL until Phase 4),
+  `poseQuality` (landmark checks, stability tracker), `imageQuality` (light, contrast, sharpness,
+  backlight), `heightInput`, `autoCapture`, `scanReducer`, `cameraService` (error taxonomy,
+  permission and track watchers), `frameCapture`, `poseDetector` (lazy MediaPipe, GPU then CPU).
+- Pose model: MediaPipe Pose Landmarker (lite), self-hosted (`public/models/pose/`, WASM copied by
+  `scripts/copy-mediapipe-wasm.js`). No third-party CDN, so no body image leaves the origin.
+  `npm run verify:pose-model` and `public/models/pose/NOTICE.md` explain provenance (see Known issues).
+- Dependency: `@mediapipe/tasks-vision@1.2.0`.
+- Tests: 146 new Vitest tests (checks on synthetic poses and images, every camera error type,
+  permission changes, reducer gating, the full UI flow with a fake camera) and 12 Playwright tests per
+  project (real Chromium, fake camera device, real MediaPipe). `scripts/verify-phase3.sh`.
+- `e2e/fixtures/`: renders of the sample mannequin and `make-videos.js` (ffmpeg -> y4m fake cameras).
+
+### Modified
+- `App.jsx`: "Start body scan" opens the scanner (lazy loaded; the camera stays off until the person
+  presses Start camera). `App.test.jsx`, `test/setup.js` (object-URL stub), `e2e/helpers.js`
+  (native MediaPipe/ANGLE log lines allow-listed), `playwright.config.js` (global setup).
+
+### Bugs found by the new tests and fixed
+- One press of Start camera asked for the camera twice under React StrictMode (effects run twice).
+  Camera and model start are now deferred one tick; regression test added.
+- "Hold still" could never pass on a slow device: the stability window needed 4 samples in 700 ms but
+  software MediaPipe gave ~5 detections per second. The tracker now keeps at least 3 samples (max age 4 s).
+- In the dark the detector finds nobody, so "No person detected" hid the real cause. Lighting is now
+  reported first.
+- The Retake button's accessible name read "RetakeFront photo"; it now has an explicit aria-label.
+- Infinity was reported as an out-of-range height instead of "not a number".
+- If body detection failed to load, the camera was left on behind the error. It is now stopped.
+
 ## Phase 2: Interactive 3D visualization (2026-10-31)
 
 ### Added

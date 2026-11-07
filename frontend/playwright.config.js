@@ -9,6 +9,7 @@ const launchOptions = {
 
 export default defineConfig({
   testDir: './e2e',
+  globalSetup: './e2e/fixtures/global-setup.js',
   testMatch: '**/*.e2e.js',
   timeout: 90_000,
   expect: { timeout: 20_000 },
